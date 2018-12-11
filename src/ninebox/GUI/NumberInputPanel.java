@@ -1,6 +1,6 @@
 package ninebox.GUI;
 
-import ninebox.DataStructure.Array99;
+import ninebox.DataStructure.Array99Solve;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ public class NumberInputPanel {
   public JPanel panel;
   JButton[] numbers = new JButton[9];
 
-  public NumberInputPanel(NineBlockBoxFill box, Array99 boxContents){
+  public NumberInputPanel(NineBlockBoxFill box, Array99Solve boxContents){
     panel = new JPanel();
 
     GridLayout gridLayout = new GridLayout(1,9);
@@ -26,8 +26,9 @@ public class NumberInputPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
           int index = box.getActiveCellIndex();
-          boxContents.setContent(index, FinalI);
-          boolean valid = boxContents.stateCheck(index);
+//          int originNum = boxContents.getContent(index);
+          boolean valid = boxContents.setContent(index, FinalI);
+//           boxContents.stateCheck(index, originNum);
 
           box.setCellNumber(index, FinalI);
           if (!valid)

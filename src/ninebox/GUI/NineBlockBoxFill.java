@@ -8,11 +8,13 @@ import java.util.Collections;
 
 public class NineBlockBoxFill extends NineBlockBox {
   ArrayList<Boolean> writable;
+  ArrayList<Boolean> validCell;
 
   NineBlockBoxFill(){
     super();
 //    boxContent = new Array99Solve();
     writable = new ArrayList<>(Collections.nCopies(81,true));
+    validCell = new ArrayList<>(Collections.nCopies(81,true));
     for (int i=0;i<9;i++){
       for (int j=0;j<9;j++){
         int index = i * 9 + j;
@@ -41,7 +43,10 @@ public class NineBlockBoxFill extends NineBlockBox {
           public void actionPerformed(ActionEvent e) {
             if (!writable.get(index)) return; // it is given
             if (activeCellIndex > -1) // there is already an active cell
-              cells[activeCellIndex].setBackground(inactiveCellColor);
+              if (validCell.get(activeCellIndex)) // is not wrongCell
+                cells[activeCellIndex].setBackground(inactiveCellColor);
+              else
+                cells[activeCellIndex].setBackground(wrongCellColor);
             cells[index].setBackground(activeCellColor);
             activeCellIndex = index;
             // TODO: make button release
@@ -91,10 +96,12 @@ public class NineBlockBoxFill extends NineBlockBox {
 
   public void cellIsWrong(int index){
     cells[index].setBackground(wrongCellColor);
+    validCell.set(index, false);
   }
 
   public void cellIsCorrect(int index){
     cells[index].setBackground(inactiveCellColor);
+    validCell.set(index, true);
   }
 
   public void setCellNumber(int index, int i){

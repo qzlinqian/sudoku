@@ -1,7 +1,7 @@
 /*
 package ninebox;
 
-public class Array99Fill extends Array99 {
+public class Array99Fill extends Array99Mother {
 
   Array99Fill(){
     super();

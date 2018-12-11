@@ -16,7 +16,7 @@ public class NineBlockBox {
   static Color inactiveCellColor = new Color(0.95f,0.9f,0.9f,0.4f);  // unselected box
   static Color wrongCellColor = new Color(1.0f, 0.2f,0.2f,0.95f);  // box with wrong number
   static Color inertCellColor = new Color(0.6f,0.8f,0.9f,0.95f);  // unchangeable box
-//  Array99 boxContent; // = new Array99 boxContent;
+//  Array99Mother boxContent; // = new Array99Mother boxContent;
   public JPanel panel;
   JPanel[] panels = new JPanel[9];
   JButton[] cells = new JButton[81];
