@@ -58,7 +58,7 @@ abstract public class Array99Mother extends Array99{
     int number = (int) Math.pow(2,degree);
     while (number < numberInput){
       numberInput -= number;
-      degree = (int) Math.floor(Math.log(numberInput));
+      degree = (int) Math.floor(Math.log(numberInput)/Math.log(2));
       number = (int) Math.pow(2,degree);
       sum++;
     }

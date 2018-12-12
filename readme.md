@@ -20,7 +20,7 @@
 (Develop later, add a JFrame containing all the panels?)
 
 #### TODO
-- [ ] test the DataStructure
+- [x] test the DataStructure
 - [ ] make the former pressed button release
 - [ ] move solve() outside the Array99Compute
 - [ ] merge Array99 and its kids

@@ -20,6 +20,14 @@ public class Array99 {
     this.boxContents = new ArrayList<>(array99.boxContents);
   }
 
+  Array99(ArrayList<Integer> boxContents){
+    this.boxContents = new ArrayList<>();
+    for (int i:boxContents){
+      if (i==0) this.boxContents.add(0);
+      else this.boxContents.add(num[i-1]);
+    }
+  }
+
 
   public int getContent(int row, int column){
     return boxContents.get(row * 9 + column);
@@ -44,5 +52,17 @@ public class Array99 {
 
   public boolean setContent(int index, int content){
     return setContent(index/9, index%9, content);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder print = new StringBuilder();
+    for (int i=0;i<9;i++){
+      for (int j=0;j<9;j++){
+        print.append(getContent(i,j)).append(" ");
+      }
+      print.append("\n");
+    }
+    return print.toString();
   }
 }
