@@ -6,7 +6,7 @@ import java.util.Collections;
 public class Array99 {
   ArrayList<Integer> boxContents;
   static int init = 0;
-  static int full = 0b111111111;
+  static int full = 511;
   static int num[] = {1,2,4,8,16,32,64,128,256};
   ArrayList<Integer> rowState;
   ArrayList<Integer> columnState;

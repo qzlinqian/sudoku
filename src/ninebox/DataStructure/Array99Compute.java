@@ -12,7 +12,7 @@ public class Array99Compute extends Array99Mother{
   private int minCasesAt, minCases;
   int i,j;
 
-  Array99Compute(Array99 array99){
+  Array99Compute(Array99 array99, boolean init){
     super(array99);
     this.minCases = 9;
     this.minCasesAt = 81;
@@ -42,16 +42,25 @@ public class Array99Compute extends Array99Mother{
         boxState.set(i*3+j,aux);
       }
     }
+    for (int i=0;i<81;i++)
+      if (getContent(i) == 0)
+        markUp(i/9,i%9);
   }
 
   Array99Compute(Array99Compute array99Compute){ // No need to update State arrays
     super(array99Compute);
     this.solutions = new ArrayList<>();
-    this.possibleContents = new ArrayList<>(Collections.nCopies(81,0));
+    this.possibleContents = new ArrayList<>(array99Compute.possibleContents);
   }
 
   Array99Compute(){
-    this(new Array99());
+    this(new Array99(),true);
+  }
+
+  // markUp should call after all the state updated !!!!!!
+  private void markUp(int row, int column){
+    int state = rowState.get(row) | columnState.get(column) | boxState.get((row/3)*3 + column/3);
+    possibleContents.set(row*9+column, full-state);
   }
 
   @Override
@@ -79,6 +88,16 @@ public class Array99Compute extends Array99Mother{
     checkRow(row, column);
     checkColumn(row, column);
     checkBox(row, column);
+    for (int j=0;j<9;j++)
+      if (getContent(row,j) == 0) // need to fill
+        markUp(row,j);
+    for (int i=0;i<9;i++)
+      if (getContent(i,column) == 0)
+        markUp(i,column);
+    for (int i=(row/3)*3;i<(row/3)*3+3;i++)
+      for (int j=(column/3)*3;j<(column/3)*3+3;j++)
+        if (getContent(i,j) == 0)
+          markUp(i,j);
     return true;
   }
 
@@ -91,26 +110,51 @@ public class Array99Compute extends Array99Mother{
     for (int i=0;i<9;i++){ // row
       for (int j=0;j<9;j++){ // column
         if (getContent(i,j) > 0) continue;
-        int state = rowState.get(i) | columnState.get(j) | boxState.get((i/3)*3 + j/3);
-        if (state == full) {
+        int state = possibleContents.get(i*9+j);
+        if (state == 0) {
           this.i = i;
           this.j = j;
+//          System.out.println("2");
           return 0; // cannot fill anything but the box is empty, no solution
         }
-        int cases = possibleNumbers(full-state);
+        int cases = possibleNumbers(state);
         if (cases == 1){ // Then fill it!
-          setContent(i,j,full-state);
+          setContent(i,j,state);
           flag = 1;
-        } else if (flag>1 && cases < minCases){ // lazy principle
-          // when flag=1, no need to use the minimum case
-          minCases = cases;
-          minCasesAt = i*9+j;
-          possibleContents.set(i*9+j, full-state);
-          flag = 3;
+        } else {
+          int excluded = exclude(i,j);
+          if (excluded == 0) return 0; // no solution
+          if (excluded == 2){ // filled a block
+            flag = 1;
+            continue;
+          }
+          if (flag > 1 && cases<minCases){ // lazy principle
+            minCases = cases;
+            minCasesAt = i*9+j;
+            flag = 3;
+          }
         }
       }
     }
     return flag;
+  }
+
+  // 0: no solution; 1: cannot exclude; 2: exclude successfully
+  int exclude(int row, int column){
+    int aux = possibleContents.get(row*9 + column);
+    if (row % 3 != 0) aux &= rowState.get((row/3)*3);
+    if (row % 3 != 1) aux &= rowState.get((row/3)*3 + 1);
+    if (row % 3 != 2) aux &= rowState.get((row/3)*3 + 2);
+    if (column % 3 != 0) aux &= columnState.get((column/3)*3);
+    if (column % 3 != 1) aux &= columnState.get((column/3)*3 + 1);
+    if (column % 3 != 2) aux &= columnState.get((column/3)*3 + 2);
+    if (aux == 0) return 1;
+    if (possibleNumbers(aux)>1) {
+//      System.out.println("1");
+      return 0;
+    }
+    setContent(row,column,aux);
+    return 2;
   }
 
   // TODO: move solve() to outside class?
@@ -120,7 +164,7 @@ public class Array99Compute extends Array99Mother{
       if (flag == 0) return;
       if (flag == 1) continue;
       if (flag == 2){
-        this.solutions.add(new Array99(this)); // solve finished, solution added
+        this.solutions.add(new Array99Compute(this)); // Finished, add solution
         return;
       }
       // flag == 3, enumerate
@@ -179,11 +223,23 @@ public class Array99Compute extends Array99Mother{
          0,0,0,0,2,0,0,0,0,
          7,0,2,8,0,5,0,0,3,
          0,0,0,3,0,0,2,7,5};
+    /*Integer[] temp =
+        {5,3,0,0,7,0,0,0,0,
+         6,0,0,1,9,5,0,0,0,
+         0,9,8,0,0,0,0,6,0,
+
+         8,0,0,0,6,0,0,0,3,
+         4,0,0,8,0,3,0,0,1,
+         7,0,0,0,2,0,0,0,6,
+
+         0,6,0,0,0,0,2,8,0,
+         0,0,0,4,1,9,0,0,5,
+         0,0,0,0,8,0,0,7,9};*/
     ArrayList<Integer> boxCon = new ArrayList<>();
     Collections.addAll(boxCon,temp);
     Array99 t = new Array99(boxCon);
-    Array99Compute test = new Array99Compute(t);
+    Array99Compute test = new Array99Compute(t, true);
     test.solve();
-    System.out.println(test.solutions.get(0));
+    System.out.println(test);
   }
 }
