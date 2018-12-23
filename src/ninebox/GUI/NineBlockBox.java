@@ -1,5 +1,7 @@
 package ninebox.GUI;
 
+import ninebox.DataStructure.Array99Generate;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -9,32 +11,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 
-public class NineBlockBox {
+public class NineBlockBox extends JPanel{
   static Color activeCellColor = new Color(0.9f,0.8f,0.8f,0.8f);  // selected box
   static Color inactiveCellColor = new Color(0.95f,0.9f,0.9f,0.4f);  // unselected box
   static Color wrongCellColor = new Color(1.0f, 0.2f,0.2f,0.95f);  // box with wrong number
   static Color inertCellColor = new Color(0.6f,0.8f,0.9f,0.95f);  // unchangeable box
 //  Array99Mother boxContent; // = new Array99Mother boxContent;
-  public JPanel panel;
+//  public JPanel panel;
   JPanel[] panels = new JPanel[9];
   JButton[] cells = new JButton[81];
 //  static JFrame f = null;
 //  DocumentListener docListener;
   int activeCellIndex;
 
+  // Use in NineBlockBoxFill, but should be put here
+  ArrayList<Boolean> writable;
+  ArrayList<Boolean> validCell;
+
 
   NineBlockBox(/*JFrame f*/)/* throws NumberFormatException*/{
 //    f = new JFrame("test");
     GridLayout generalGridLayout = new GridLayout(3,3,10,10);
     GridLayout subGridLayout = new GridLayout(3,3,1,1);
-    panel = new JPanel();
-    panel.setLayout(generalGridLayout);
+//    panel = new JPanel();
+    this.setLayout(generalGridLayout);
     for (int i=0;i<9;i++){
       panels[i] = new JPanel();
       panels[i].setLayout(subGridLayout);
-      panel.add(panels[i]);
+      this.add(panels[i]);
     }
 
     activeCellIndex = -1; // init
@@ -50,7 +57,20 @@ public class NineBlockBox {
     });*/
   }
 
+  public void setCellNumber(int index, int i){
+    cells[index].setText(Integer.toString(i));
+  }
+
+  public void markCellNumber(int index, int i){
+    String prevMark = cells[index].getText();
+    cells[index].setText(prevMark+i);
+  }
+
   public int getActiveCellIndex() {
     return activeCellIndex;
+  }
+
+  interface boxContentsUpdate{
+    void boxContentsUpdate(Array99Generate generatedContents);
   }
 }

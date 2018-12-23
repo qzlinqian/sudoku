@@ -12,7 +12,7 @@ public class Array99Compute extends Array99Mother{
   private int minCasesAt, minCases;
   int i,j;
 
-  Array99Compute(Array99 array99){
+  public Array99Compute(Array99 array99){
     super(array99);
     this.minCases = 9;
     this.minCasesAt = 81;
@@ -50,7 +50,7 @@ public class Array99Compute extends Array99Mother{
     this.possibleContents = new ArrayList<>(Collections.nCopies(81,0));
   }
 
-  Array99Compute(){
+  public Array99Compute(){
     this(new Array99());
   }
 
@@ -132,7 +132,7 @@ public class Array99Compute extends Array99Mother{
         oneCase.setContent(minCasesAt,num[number19]);
         oneCase.solve();
         this.solutions.addAll(oneCase.solutions);
-        System.out.println(oneCase.solutions.size());
+//        System.out.println(oneCase.solutions.size());
       } while ( possibleNumber > 0 );
       return;
     }

@@ -36,7 +36,7 @@ abstract public class Array99Mother extends Array99{
     return true;
   }
 
-  public int findNumber(int numberInput){ // if return with i = 1~9, it is a single number, 2^(i-1) = num[i-1], representing i
+  public static int findNumber(int numberInput){ // if return with i = 1~9, it is a single number, 2^(i-1) = num[i-1], representing i
     int lo=0,hi=9;
     int mi = (lo+hi)/2;
     while (lo<mi){

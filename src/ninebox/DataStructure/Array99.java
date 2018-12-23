@@ -37,6 +37,10 @@ public class Array99 {
     return boxContents.get(index);
   }
 
+  public int getContent(int box_row, int box_column, int row_in_box, int column_in_box){
+    return getContent(box_row * 3 + row_in_box, box_column * 3 + column_in_box);
+  }
+
   public void resetContent(int row, int column){
     resetContent(row * 9 + column);
   }
@@ -47,6 +51,11 @@ public class Array99 {
 
   public boolean setContent(int row, int column, int content){
     boxContents.set(row * 9 + column, content);
+    return true;
+  }
+
+  public boolean setContent(int box_row, int box_column, int row_in_box, int column_in_box, int content){
+    setContent(box_row * 3 + row_in_box, box_column * 3 + column_in_box, content);
     return true;
   }
 

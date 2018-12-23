@@ -20,6 +20,14 @@ public class Array99Solve extends Array99Mother {
     this(new Array99());
   }
 
+  public void contentsUpd(Array99Generate newContents){
+    for (int index=0;index<81;index++){
+      if (newContents.getVisible(index))
+        this.boxContents.set(index,newContents.getContent(index));
+      else this.boxContents.set(index,0);
+    }
+  }
+
   @Override
   boolean checkRow(int row, int column){
 //    if ((getContent(row, column) & rowState.get(row)) != 0)

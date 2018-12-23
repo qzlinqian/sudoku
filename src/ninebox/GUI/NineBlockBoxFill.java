@@ -1,14 +1,14 @@
 package ninebox.GUI;
 
+import ninebox.DataStructure.Array99Generate;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class NineBlockBoxFill extends NineBlockBox {
-  ArrayList<Boolean> writable;
-  ArrayList<Boolean> validCell;
+public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxContentsUpdate{
 
   NineBlockBoxFill(){
     super();
@@ -94,6 +94,20 @@ public class NineBlockBoxFill extends NineBlockBox {
   }
 
 
+  @Override
+  public void boxContentsUpdate(Array99Generate generatedContents){
+    for (int index=0;index<81;index++){
+      boolean canWrite = writable.set(index,generatedContents.getVisible(index));
+      if (canWrite)
+        cells[index].setBackground(inactiveCellColor);
+      else {
+        cells[index].setBackground(inertCellColor);
+        setCellNumber(index,generatedContents.getContent(index));
+      }
+    }
+  }
+
+
   public void cellIsWrong(int index){
     cells[index].setBackground(wrongCellColor);
     validCell.set(index, false);
@@ -102,9 +116,5 @@ public class NineBlockBoxFill extends NineBlockBox {
   public void cellIsCorrect(int index){
     cells[index].setBackground(inactiveCellColor);
     validCell.set(index, true);
-  }
-
-  public void setCellNumber(int index, int i){
-    cells[index].setText(Integer.toString(i));
   }
 }
