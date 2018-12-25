@@ -42,10 +42,10 @@ abstract public class Array99Mother extends Array99{
     while (lo<mi){
 //      if (num[mi] == numberInput) // it's highly possible, so we can put it here
 //        return mi+1;
-      if (num[mi] < numberInput)
-        lo = mi;
-      else
+      if (num[mi] > numberInput)
         hi = mi;
+      else
+        lo = mi;
       mi = (lo+hi)/2;
     }
     return lo; // it is not an element of num[]

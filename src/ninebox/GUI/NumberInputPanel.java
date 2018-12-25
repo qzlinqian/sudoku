@@ -49,9 +49,9 @@ public class NumberInputPanel extends JPanel{
     }
 
     // Mark Up selection
-    markUpButton = new JButton("Mark");
+    markUpButton = new JButton("M");
     markUpButton.setBorderPainted(false);
-//        markUpButton.setOpaque(true);
+    markUpButton.setOpaque(true);
     markUpButton.setBackground(NineBlockBox.inactiveCellColor);
     markUpButton.addActionListener(new ActionListener() {
       @Override

@@ -46,6 +46,20 @@ public class NineBlockBox extends JPanel{
 
     activeCellIndex = -1; // init
 
+    for (int i=0;i<9;i++) {
+      for (int j = 0; j < 9; j++) {
+        int index = i * 9 + j;
+        int panelIndex = (i / 3) * 3 + j / 3;
+
+        // button appearance setup
+        // text
+        cells[index] = new JButton("");
+
+        // add to panel
+        panels[panelIndex].add(cells[index]);
+      }
+    }
+
 
     /*f.add(panel);
     f.setVisible(true);

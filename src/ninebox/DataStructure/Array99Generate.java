@@ -21,20 +21,31 @@ public class Array99Generate extends Array99{
   }
 
   private int setVisible(double constant) {
-    int blankBlocks = (int) Math.floor(constant * 81);
-    Calendar calendar;
+//    int blankBlocks = (int) Math.floor(constant * 81);
+//    Calendar calendar;
     Random random = new Random();
+//    calendar = Calendar.getInstance();  // Java have done this for you
+//    random.setSeed(calendar.get(Calendar.SECOND));
     int i = 0;
-    while (i < blankBlocks) {
-      calendar = Calendar.getInstance();
-      random.setSeed(calendar.get(Calendar.SECOND));
-
-      int temp = random.nextInt(81);
-      if (visible.get(temp)) {
-        visible.set(temp, false);
-        i++;
-      }
+//    while (i < blankBlocks) {
+//      calendar = Calendar.getInstance();
+//      random.setSeed(calendar.get(Calendar.SECOND));
+//
+//      int temp = random.nextInt(81);
+//      if (visible.get(temp)) {
+//        visible.set(temp, false);
+//        i++;
+//      }
+//    }
+//    return i;
+    // The above method is too time consuming cause the random number is highly possible to fall into the chosen position, use possibility instead
+    for (int index=0;index<81;index++){
+      double temp = random.nextDouble();
+      if (temp > constant) continue;
+      visible.set(index,false);
+      i++;
     }
+
     return i;
   }
 
@@ -45,19 +56,19 @@ public class Array99Generate extends Array99{
   }
 
   public void generateScheme(){
-    generateScheme(0.4);
+    generateScheme(0.3);
   }
 
   // Reset boxUnit serial to get a new fill scheme
   private void shuffle(){
-    Calendar calendar = Calendar.getInstance();
-    Random random = new Random(calendar.get(Calendar.SECOND));
+//    Calendar calendar = Calendar.getInstance();  // Java do this for you
+    Random random = new Random(/*calendar.get(Calendar.SECOND)*/);
     int circulate = random.nextInt(20)+10; // Random swap times
 
     // Swap two numbers
     for (int i=0;i<circulate;i++){
-      calendar = Calendar.getInstance();
-      random.setSeed(calendar.get(Calendar.SECOND));
+//      calendar = Calendar.getInstance();
+//      random.setSeed(calendar.get(Calendar.SECOND));
       int index1 = random.nextInt(9);
       int index2 = random.nextInt(9);
       swapReference(index1, index2);

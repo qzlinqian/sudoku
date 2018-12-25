@@ -24,4 +24,19 @@ public class QuestionGenerateButton extends JButton {
     nineBlockBox.boxContentsUpdate(generateContents);
     fillingContents.contentsUpd(generateContents);
   }
+
+  public static void main(String[] args){
+    NineBlockBoxFill boxFill = new NineBlockBoxFill();
+    Array99Generate generate = new Array99Generate();
+    Array99Solve solve = new Array99Solve();
+    QuestionGenerateButton button = new QuestionGenerateButton(boxFill, generate, solve);
+    JFrame f = new JFrame();
+    JPanel p = new JPanel();
+    p.add(boxFill);
+    p.add(button);
+    f.add(p);
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setBounds(20,20, 500,500);
+    f.setVisible(true);
+  }
 }

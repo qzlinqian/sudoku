@@ -1,6 +1,7 @@
 package ninebox.GUI;
 
 import ninebox.DataStructure.Array99Generate;
+import ninebox.DataStructure.Array99Mother;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +23,7 @@ public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxCo
 
         // button appearance setup
         // text
-        cells[index] = new JButton("");
+//        cells[index] = new JButton("");
         // color
         cells[index].setOpaque(true);
         if (writable.get(index))
@@ -31,8 +32,8 @@ public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxCo
           cells[index].setBackground(inertCellColor);
         cells[index].setBorderPainted(false);
 
-        // add to panel
-        panels[panelIndex].add(cells[index]);
+//        // add to panel
+//        panels[panelIndex].add(cells[index]);
 //        cells[index].setFocusable(false);
 //        cells[index].setPressedIcon(cells[index].getIcon());
 //        int finalI = i;
@@ -97,12 +98,15 @@ public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxCo
   @Override
   public void boxContentsUpdate(Array99Generate generatedContents){
     for (int index=0;index<81;index++){
-      boolean canWrite = writable.set(index,generatedContents.getVisible(index));
+      boolean canWrite = !(generatedContents.getVisible(index));
+          writable.set(index,canWrite);
       if (canWrite)
         cells[index].setBackground(inactiveCellColor);
       else {
         cells[index].setBackground(inertCellColor);
-        setCellNumber(index,generatedContents.getContent(index));
+        int number = generatedContents.getContent(index);
+        number = Array99Mother.findNumber(number);
+        setCellNumber(index,number+1);
       }
     }
   }

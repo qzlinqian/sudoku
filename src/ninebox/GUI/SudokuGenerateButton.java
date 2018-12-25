@@ -17,4 +17,18 @@ public class SudokuGenerateButton extends JButton {
       }
     });
   }
+
+  public static void main(String[] args){
+    Array99Generate boxContents = new Array99Generate();
+    NineBlockBoxDisplay blockBoxDisplay = new NineBlockBoxDisplay();
+    SudokuGenerateButton button = new SudokuGenerateButton(blockBoxDisplay, boxContents);
+    JFrame f = new JFrame();
+    JPanel p = new JPanel();
+    p.add(blockBoxDisplay);
+    p.add(button);
+    f.add(p);
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setBounds(20,20, 500,500);
+    f.setVisible(true);
+  }
 }
