@@ -29,8 +29,14 @@ abstract public class Array99Mother extends Array99{
   }
 
 
-  public boolean isFinished_boxCheck(){
+  public boolean isFinished(){
     for (int temp:boxState)
+      if (temp < full)
+        return false;
+    for (int temp:columnState)
+      if (temp < full)
+        return false;
+    for (int temp:rowState)
       if (temp < full)
         return false;
     return true;

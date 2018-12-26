@@ -1,5 +1,6 @@
 package ninebox.GUI;
 
+import ninebox.Auxiliary.StopWatch;
 import ninebox.DataStructure.Array99Mother;
 import ninebox.DataStructure.Array99Solve;
 
@@ -14,10 +15,13 @@ public class NumberInputPanel extends JPanel{
   JButton[] numbers = new JButton[9];
   JButton markUpButton;
   boolean markUp;
+  private JDialog inform;
 
-  public NumberInputPanel(NineBlockBoxFill box, Array99Mother boxContents){
+  public NumberInputPanel(NineBlockBoxFill box, Array99Mother boxContents, StopWatch timer, JPanel panel){
 //    panel = new JPanel();
     markUp = false;
+
+//    inform = new JDialog();
 
     GridLayout gridLayout = new GridLayout(1,10);
     this.setLayout(gridLayout);
@@ -45,6 +49,12 @@ public class NumberInputPanel extends JPanel{
               box.cellIsWrong(index);
             else
               box.cellIsCorrect(index);
+          }
+
+          if (boxContents.isFinished()){
+            timer.stopCommand();
+            JOptionPane.showMessageDialog(panel, "You've completed this in "+timer, "Congrats!", JOptionPane.PLAIN_MESSAGE);
+            // That won't show after "QuickSolve" action, for that just update GUI and Array99Compute without change Array99Fill
           }
         }
       });

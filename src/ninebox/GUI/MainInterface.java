@@ -1,16 +1,21 @@
 package ninebox.GUI;
 
+import ninebox.Auxiliary.StopWatch;
 import ninebox.DataStructure.Array99Compute;
 import ninebox.DataStructure.Array99Generate;
 import ninebox.DataStructure.Array99Mother;
 import ninebox.DataStructure.Array99Solve;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainInterface {
+  boolean isPlaying;
+
   // My components
 //  Array99Compute computer;
   Array99Solve solving, filling;
@@ -28,13 +33,20 @@ public class MainInterface {
   QuickSolveButton quickSolveButton;
   JButton solveButton;  // A "fake" quickSolveButton under freeFill mode, for the auto-compute algorithm won't survive
   ResetFilledButton resetButton1, resetButton2;
+  JButton pauseButton;
+
+  JSlider slider;
 
   // Display frame & panel
   JFrame GUIMain;
   JPanel solvePanel, displayPanel, freePanel;
   JTabbedPane tab;
 
+  StopWatch timer1, timer2;
+
   public MainInterface(){
+    isPlaying = true;
+
     // init along with create relevance
 //    computer = new Array99Compute();  // Used only in QuickSolveButton
     solving = new Array99Solve();
@@ -44,18 +56,6 @@ public class MainInterface {
     solveFillBox = new NineBlockBoxFill();
     freeFillBox = new NineBlockBoxFill();
     displayBox = new NineBlockBoxDisplay();
-
-    numberPanel = new NumberInputPanel(solveFillBox, solving);
-    freeNumberPanel = new NumberInputPanel(freeFillBox, filling);
-    generateProbButton = new QuestionGenerateButton(solveFillBox, generator, solving);
-    generateDispButton = new SudokuGenerateButton(displayBox, generator2);
-    hintButton = new HintButton(solving, generator, solveFillBox);
-    quickSolveButton = new QuickSolveButton(solveFillBox, solving);
-    solveButton = new JButton("Solve");
-    resetButton1 = new ResetFilledButton(solving,solveFillBox);
-    resetButton2 = new ResetFilledButton(filling,freeFillBox);
-
-    GUIMain = new JFrame("Sudoku");
 
     // Layout config
     solvePanel = new JPanel(new BorderLayout());
@@ -71,19 +71,72 @@ public class MainInterface {
 
     tab = new JTabbedPane(SwingConstants.TOP);
 
+
+    timer1 = new StopWatch();
+    timer2 = new StopWatch();
+
+    numberPanel = new NumberInputPanel(solveFillBox, solving, timer1, solvePanel);
+    freeNumberPanel = new NumberInputPanel(freeFillBox, filling, timer2, freePanel);
+    generateProbButton = new QuestionGenerateButton(solveFillBox, generator, solving);
+    generateDispButton = new SudokuGenerateButton(displayBox, generator2);
+    hintButton = new HintButton(solving, generator, solveFillBox);
+    quickSolveButton = new QuickSolveButton(solveFillBox, solving);
+    solveButton = new JButton("Solve");
+    resetButton1 = new ResetFilledButton(solving,solveFillBox);
+    resetButton2 = new ResetFilledButton(filling,freeFillBox);
+    pauseButton = new JButton("Pause");
+
+
+    GUIMain = new JFrame("Sudoku");
+
+    initSlider();
+
     // Components setup
     // Solve Mode
+    pauseButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (isPlaying){
+          timer1.stopCommand();
+          solveFillBox.setVisible(false);
+          pauseButton.setText("Continue");
+          isPlaying = false;
+        } else {
+          timer1.continueCommand();
+          solveFillBox.setVisible(true);
+          pauseButton.setText("Pause");
+          isPlaying = true;
+        }
+      }
+    });
     solvePanel.add(solveFillBox, BorderLayout.CENTER);
     solvePanel.add(numberPanel, BorderLayout.SOUTH);
     // Solve mode auxiliary bar
     JPanel solveAuxPanel = new JPanel();
-    BoxLayout horBoxLayout = new BoxLayout(solveAuxPanel,BoxLayout.X_AXIS);
-    solveAuxPanel.setLayout(horBoxLayout);
-    solveAuxPanel.add(generateProbButton);
-    solveAuxPanel.add(quickSolveButton);
-    solveAuxPanel.add(resetButton1);
-    solveAuxPanel.add(hintButton);
-    // TODO: add timer, difficulty setting etc.
+    JPanel solveAuxPanel1 = new JPanel();
+    JPanel solveAuxPanel2 = new JPanel();
+
+    BoxLayout verBoxLayout = new BoxLayout(solveAuxPanel,BoxLayout.Y_AXIS);
+    BoxLayout horBoxLayout1 = new BoxLayout(solveAuxPanel1,BoxLayout.X_AXIS);
+    BoxLayout horBoxLayout2 = new BoxLayout(solveAuxPanel2,BoxLayout.X_AXIS);
+    solveAuxPanel.setLayout(verBoxLayout);
+    solveAuxPanel1.setLayout(horBoxLayout1);
+    solveAuxPanel2.setLayout(horBoxLayout2);
+    solveAuxPanel1.add(generateProbButton);
+    solveAuxPanel1.add(quickSolveButton);
+    solveAuxPanel1.add(resetButton1);
+    solveAuxPanel1.add(hintButton);
+    solveAuxPanel1.add(timer1.timerPanel);
+    solveAuxPanel2.add(new JLabel("Difficulty:"));
+    solveAuxPanel2.add(slider);
+    solveAuxPanel2.add(pauseButton);
+    generateProbButton.addActionListener(timer1);
+    resetButton1.addActionListener(timer1);
+    // TODO: add difficulty setting etc.
+//    solvePanel.add(solveAuxPanel1, BorderLayout.NORTH);
+//    solvePanel.add(solveAuxPanel2, BorderLayout.NORTH);
+    solveAuxPanel.add(solveAuxPanel1);
+    solveAuxPanel.add(solveAuxPanel2);
     solvePanel.add(solveAuxPanel, BorderLayout.NORTH);
     tab.addTab("Solve Problem",solvePanel);
 
@@ -95,14 +148,20 @@ public class MainInterface {
 
     // Free Fill Mode
     JPanel fillAuxPanel = new JPanel();
-    BoxLayout horBoxLayout2 = new BoxLayout(fillAuxPanel,BoxLayout.X_AXIS);
-    fillAuxPanel.setLayout(horBoxLayout2);
+    BoxLayout horBoxLayoutFill = new BoxLayout(fillAuxPanel,BoxLayout.X_AXIS);
+    fillAuxPanel.setLayout(horBoxLayoutFill);
     fillAuxPanel.add(solveButton);
     fillAuxPanel.add(resetButton2);
+    fillAuxPanel.add(timer2.timerPanel);
+    solveButton.addActionListener(timer2);
+    solveButton.addActionListener(timer2);
     freePanel.add(freeFillBox, BorderLayout.CENTER);
     freePanel.add(freeNumberPanel, BorderLayout.SOUTH);
     freePanel.add(fillAuxPanel, BorderLayout.NORTH);
     tab.addTab("Free Fill",freePanel);
+
+    timer1.start();
+    timer2.start();
 
     GUIMain.add(tab);
     GUIMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -154,6 +213,19 @@ public class MainInterface {
         }
       });
     }
+  }
+
+  private void initSlider(){
+    slider = new JSlider(SwingConstants.HORIZONTAL, 0,60,30);
+    slider.setPaintTrack(true);
+    slider.setPaintLabels(false);
+    slider.addChangeListener(new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+//        difficulty = slider.getValue();
+        generator.setDifficulty(slider.getValue());
+      }
+    });
   }
 
 }

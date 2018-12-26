@@ -8,12 +8,14 @@ import java.util.Random;
 public class Array99Generate extends Array99{
   int[] boxUnit;
 //  int[] swapSerial;
-  ArrayList<Boolean> visible;
+  private ArrayList<Boolean> visible;
+  private int difficulty;
 
   public Array99Generate(){
     // Initiate two list
     boxUnit = new int[]{0,1,2,3,4,5,6,7,8};
     visible = new ArrayList<>(Collections.nCopies(81,true));
+    difficulty = 30;
 //    swapSerial = new int[]{1,2,3,4,5,6,7,8,9};
 //    shuffle();
 //    fillBoxes();
@@ -41,9 +43,12 @@ public class Array99Generate extends Array99{
     // The above method is too time consuming cause the random number is highly possible to fall into the chosen position, use possibility instead
     for (int index=0;index<81;index++){
       double temp = random.nextDouble();
-      if (temp > constant) continue;
-      visible.set(index,false);
-      i++;
+      if (temp > constant)
+        visible.set(index, true);
+      else {
+        visible.set(index,false);
+        i++;
+      }
     }
 
     return i;
@@ -56,7 +61,7 @@ public class Array99Generate extends Array99{
   }
 
   public void generateScheme(){
-    generateScheme(0.3);
+    generateScheme(difficulty/100.0);
   }
 
   // Reset boxUnit serial to get a new fill scheme
@@ -130,5 +135,9 @@ public class Array99Generate extends Array99{
     int temp = boxUnit[i];
     boxUnit[i] = boxUnit[j];
     boxUnit[j] = temp;
+  }
+
+  public void setDifficulty(int difficulty){
+    this.difficulty = difficulty;
   }
 }

@@ -99,9 +99,11 @@ public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxCo
   public void boxContentsUpdate(Array99Generate generatedContents){
     for (int index=0;index<81;index++){
       boolean canWrite = !(generatedContents.getVisible(index));
-          writable.set(index,canWrite);
-      if (canWrite)
+      writable.set(index,canWrite);
+      if (canWrite) {
         cells[index].setBackground(inactiveCellColor);
+        resetCellNumber(index);
+      }
       else {
         cells[index].setBackground(inertCellColor);
         int number = generatedContents.getContent(index);
