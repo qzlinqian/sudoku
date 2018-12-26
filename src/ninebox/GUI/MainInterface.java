@@ -1,7 +1,7 @@
 package ninebox.GUI;
 
+import ninebox.Auxiliary.HistoryArrayLoader;
 import ninebox.Auxiliary.StopWatch;
-import ninebox.DataStructure.Array99Compute;
 import ninebox.DataStructure.Array99Generate;
 import ninebox.DataStructure.Array99Mother;
 import ninebox.DataStructure.Array99Solve;
@@ -12,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class MainInterface {
   boolean isPlaying;
@@ -26,6 +27,8 @@ public class MainInterface {
   NineBlockBoxDisplay displayBox;
 
   NumberInputPanel numberPanel, freeNumberPanel;
+
+  HistoryLoaderPanel historyPanel;
 
   QuestionGenerateButton generateProbButton;
   SudokuGenerateButton generateDispButton;
@@ -68,6 +71,7 @@ public class MainInterface {
     freePanel = new JPanel(new BorderLayout());
 //    BoxLayout boxLayout1 = new BoxLayout(freePanel,BoxLayout.Y_AXIS);
 //    freePanel.setLayout(boxLayout1);
+    historyPanel = new HistoryLoaderPanel();
 
     tab = new JTabbedPane(SwingConstants.TOP);
 
@@ -88,6 +92,24 @@ public class MainInterface {
 
 
     GUIMain = new JFrame("Sudoku");
+
+    tab.addTab("Load History",historyPanel);
+    historyPanel.confirmButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          timer1.stopCommand();
+          HistoryArrayLoader.loadHistory(historyPanel.getChosenFile(), solving, solveFillBox, timer1);
+        } catch (IOException e1) {
+          e1.printStackTrace();
+        }
+        tab.setSelectedIndex(1); // Go to the solve mode, under "Pause" state
+        solveFillBox.setVisible(false);
+        pauseButton.setText("Continue");
+        isPlaying = false;
+        // TODO: time set
+      }
+    });
 
     initSlider();
 
@@ -130,9 +152,12 @@ public class MainInterface {
     solveAuxPanel2.add(new JLabel("Difficulty:"));
     solveAuxPanel2.add(slider);
     solveAuxPanel2.add(pauseButton);
+
+    // TODO
+    SaveButton saveButton = new SaveButton(solving, solveFillBox, timer1, historyPanel);
+    solveAuxPanel2.add(saveButton);
     generateProbButton.addActionListener(timer1);
     resetButton1.addActionListener(timer1);
-    // TODO: add difficulty setting etc.
 //    solvePanel.add(solveAuxPanel1, BorderLayout.NORTH);
 //    solvePanel.add(solveAuxPanel2, BorderLayout.NORTH);
     solveAuxPanel.add(solveAuxPanel1);
@@ -169,27 +194,6 @@ public class MainInterface {
     GUIMain.setVisible(true);
   }
 
-
-  // That's for test
-  /*public static void main(String[] args){
-    NineBlockBoxFill box = new NineBlockBoxFill();
-    Array99Solve content = new Array99Solve();
-    JFrame f = new JFrame();
-    JPanel p = new JPanel();
-    NumberInputPanel number = new NumberInputPanel(box,content);
-    Container contentPane = f.getContentPane();
-    p.add(box);
-    p.add(number);
-    contentPane.add(p);
-    f.pack();
-    f.setVisible(true);
-    f.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        System.exit(0);
-      }
-    });
-  }*/
 
   public static void main(String[] args){
     MainInterface test = new MainInterface();

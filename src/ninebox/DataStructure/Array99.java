@@ -12,15 +12,15 @@ public class Array99 {
   ArrayList<Integer> columnState;
   ArrayList<Integer> boxState;
 
-  Array99(){
+  public Array99(){
     boxContents = new ArrayList<>(Collections.nCopies(81, init));
   }
 
-  Array99(Array99 array99){
+  public Array99(Array99 array99){
     this.boxContents = new ArrayList<>(array99.boxContents);
   }
 
-  Array99(ArrayList<Integer> boxContents){
+  public Array99(ArrayList<Integer> boxContents){
     this.boxContents = new ArrayList<>();
     for (int i:boxContents){
       if (i==0) this.boxContents.add(0);
@@ -71,6 +71,16 @@ public class Array99 {
         print.append(getContent(i,j)).append(" ");
       }
       print.append("\n");
+    }
+    return print.toString();
+  }
+
+  public String toPlainText(){
+    StringBuilder print = new StringBuilder();
+    for (int i=0;i<9;i++){
+      for (int j=0;j<9;j++){
+        print.append(getContent(i,j)).append(" ");
+      }
     }
     return print.toString();
   }

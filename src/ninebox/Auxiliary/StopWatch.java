@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 public class StopWatch extends Thread implements ActionListener {
   private long time;
   private long startTime;
-//  private long prevTime;
+  private long prevTime;
   private JTextField showTime;
   private JLabel label;
   private TimeGroup timeRecorder;
@@ -18,7 +18,7 @@ public class StopWatch extends Thread implements ActionListener {
 
   public StopWatch(){
     time = 0;
-//    prevTime = 0;
+    prevTime = 0;
     active = false;
     startTime = System.currentTimeMillis();
     timeRecorder = new TimeGroup();
@@ -32,13 +32,13 @@ public class StopWatch extends Thread implements ActionListener {
   }
 
   public void run(){
-    time = System.currentTimeMillis() - startTime;
+    time = System.currentTimeMillis() - startTime + prevTime;
     timeRecorder.setTime(time);
     showTime.setText(timeRecorder.toString());
 
     while (this.isAlive() && !this.isInterrupted()){
       if (active){
-        time = System.currentTimeMillis() - startTime;
+        time = System.currentTimeMillis() - startTime + prevTime;
         timeRecorder.setTime(time);
         showTime.setText(timeRecorder.toString());
         try {
@@ -49,21 +49,23 @@ public class StopWatch extends Thread implements ActionListener {
   }
 
   public void addUpTime(long prevTime){
-    startTime -= prevTime;
+    this.prevTime = prevTime;
   }
 
 
   public void stopCommand(){
+    prevTime = time;
     active = false;
   }
 
   public void startCommand(){  // Can also be used as reset.
     startTime = System.currentTimeMillis();
+    prevTime = 0;
     active = true;
   }
 
   public void continueCommand(){
-    startTime = System.currentTimeMillis() - time;
+    startTime = System.currentTimeMillis();
     active = true;
   }
 
@@ -118,5 +120,13 @@ public class StopWatch extends Thread implements ActionListener {
     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     f.setBounds(20,20,100,100);
     f.setVisible(true);
+  }
+
+  void setText(String text){
+    showTime.setText(text);
+  }
+
+  public long getTime() {
+    return time;
   }
 }

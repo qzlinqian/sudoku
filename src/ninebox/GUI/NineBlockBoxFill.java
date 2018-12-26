@@ -123,4 +123,27 @@ public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxCo
     cells[index].setBackground(inactiveCellColor);
     validCell.set(index, true);
   }
+
+  public void cellIsGiven(int index){
+    cells[index].setBackground(inertCellColor);
+    validCell.set(index, true);
+  }
+
+  public void setWritable(int index, boolean writable){
+    this.writable.set(index, writable);
+  }
+
+  public String toPlainText(){
+    StringBuilder print = new StringBuilder();
+    for (int i=0;i<81;i++){
+      if (writable.get(i)) // Filled by user
+        if (validCell.get(i))
+          print.append(1).append(" "); // Inactive cell
+        else
+          print.append(2).append(" "); // Wrong cell
+      else
+        print.append(0).append(" "); // Inert cell
+    }
+    return print.toString();
+  }
 }
