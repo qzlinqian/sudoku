@@ -36,7 +36,7 @@ public class MainInterface {
   QuickSolveButton quickSolveButton;
   JButton solveButton;  // A "fake" quickSolveButton under freeFill mode, for the auto-compute algorithm won't survive
   ResetFilledButton resetButton1, resetButton2;
-  JButton pauseButton;
+  JButton pauseButton, convertButton;
 
   JSlider slider;
 
@@ -89,6 +89,7 @@ public class MainInterface {
     resetButton1 = new ResetFilledButton(solving,solveFillBox);
     resetButton2 = new ResetFilledButton(filling,freeFillBox);
     pauseButton = new JButton("Pause");
+    convertButton = new JButton("Solve It!");
 
 
     GUIMain = new JFrame("Sudoku");
@@ -177,12 +178,33 @@ public class MainInterface {
     fillAuxPanel.setLayout(horBoxLayoutFill);
     fillAuxPanel.add(solveButton);
     fillAuxPanel.add(resetButton2);
+    fillAuxPanel.add(convertButton);
     fillAuxPanel.add(timer2.timerPanel);
     solveButton.addActionListener(timer2);
     solveButton.addActionListener(timer2);
     freePanel.add(freeFillBox, BorderLayout.CENTER);
     freePanel.add(freeNumberPanel, BorderLayout.SOUTH);
     freePanel.add(fillAuxPanel, BorderLayout.NORTH);
+    convertButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        for (int index=0;index<81;index++){
+          int temp = filling.getContent(index);
+          solving.setContent(index,temp);
+          if (temp == 0){
+            solveFillBox.resetCellNumber(index);
+            solveFillBox.setWritable(index, true);
+            solveFillBox.cellIsCorrect(index);
+          } else {
+            temp = Array99Mother.findNumber(temp);
+            solveFillBox.setCellNumber(index, temp+1);
+            solveFillBox.setWritable(index, false);
+            solveFillBox.cellIsGiven(index);
+          }
+        }
+        tab.setSelectedIndex(1);
+      }
+    });
     tab.addTab("Free Fill",freePanel);
 
     timer1.start();
