@@ -1,9 +1,7 @@
 package ninebox.DataStructure;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Stack;
 
 public class Array99Compute extends Array99Mother{
   private ArrayList<Integer> possibleContents;

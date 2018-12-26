@@ -16,27 +16,28 @@ import java.io.IOException;
 
 public class MainInterface {
   boolean isPlaying;
+  boolean isPlaying2;
 
   // My components
 //  Array99Compute computer;
-  Array99Solve solving, filling;
-  Array99Generate generator, generator2;
+  private Array99Solve solving, filling;
+  private Array99Generate generator, generator2;
 
-  NineBlockBoxFill solveFillBox;
-  NineBlockBoxFill freeFillBox;
-  NineBlockBoxDisplay displayBox;
+  private NineBlockBoxFill solveFillBox;
+  private NineBlockBoxFill freeFillBox;
+  private NineBlockBoxDisplay displayBox;
 
-  NumberInputPanel numberPanel, freeNumberPanel;
+  private NumberInputPanel numberPanel, freeNumberPanel;
 
-  HistoryLoaderPanel historyPanel;
+  private HistoryLoaderPanel historyPanel;
 
-  QuestionGenerateButton generateProbButton;
-  SudokuGenerateButton generateDispButton;
-  HintButton hintButton;
-  QuickSolveButton quickSolveButton;
-  JButton solveButton;  // A "fake" quickSolveButton under freeFill mode, for the auto-compute algorithm won't survive
-  ResetFilledButton resetButton1, resetButton2;
-  JButton pauseButton, convertButton;
+  private QuestionGenerateButton generateProbButton;
+  private SudokuGenerateButton generateDispButton;
+  private HintButton hintButton;
+  private QuickSolveButton quickSolveButton;
+  private JButton solveButton;  // A "fake" quickSolveButton under freeFill mode, for the auto-compute algorithm won't survive
+  private ResetFilledButton resetButton1, resetButton2;
+  private JButton pauseButton, convertButton, pauseButton2;
 
   JSlider slider;
 
@@ -49,6 +50,7 @@ public class MainInterface {
 
   public MainInterface(){
     isPlaying = true;
+    isPlaying2 = false;
 
     // init along with create relevance
 //    computer = new Array99Compute();  // Used only in QuickSolveButton
@@ -62,19 +64,16 @@ public class MainInterface {
 
     // Layout config
     solvePanel = new JPanel(new BorderLayout());
-//    displayPanel = new JPanel(new BoxLayout(Box.createVerticalBox(),BoxLayout.Y_AXIS));
 
     displayPanel = new JPanel();
     BoxLayout boxLayout = new BoxLayout(displayPanel,BoxLayout.Y_AXIS);
     displayPanel.setLayout(boxLayout);
 
     freePanel = new JPanel(new BorderLayout());
-//    BoxLayout boxLayout1 = new BoxLayout(freePanel,BoxLayout.Y_AXIS);
-//    freePanel.setLayout(boxLayout1);
+
     historyPanel = new HistoryLoaderPanel();
 
     tab = new JTabbedPane(SwingConstants.TOP);
-
 
     timer1 = new StopWatch();
     timer2 = new StopWatch();
@@ -89,12 +88,69 @@ public class MainInterface {
     resetButton1 = new ResetFilledButton(solving,solveFillBox);
     resetButton2 = new ResetFilledButton(filling,freeFillBox);
     pauseButton = new JButton("Pause");
+    pauseButton2 = new JButton("Start");
     convertButton = new JButton("Solve It!");
-
 
     GUIMain = new JFrame("Sudoku");
 
+
+    initHistoryPanel();
     tab.addTab("Load History",historyPanel);
+
+
+    initSlider();
+
+    // Components setup
+    // Solve Mode
+    initSolvePanel();
+
+    tab.addTab("Solve Problem",solvePanel);
+
+
+    // Display Mode
+    displayPanel.add(generateDispButton);
+    displayPanel.add(displayBox);
+    tab.addTab("Example Display",displayPanel);
+
+    // Free Fill Mode
+    initFreePanel();
+    tab.addTab("Free Fill",freePanel);
+
+    timer1.start();
+    timer2.start();
+
+    GUIMain.add(tab);
+    GUIMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    GUIMain.setBounds(20,20, 800,800);
+    GUIMain.setVisible(true);
+  }
+
+
+  public static void main(String[] args){
+    MainInterface test = new MainInterface();
+  }
+
+
+  private class HintButton extends JButton{
+    HintButton(Array99Solve boxContents, Array99Generate generatedContents, NineBlockBoxFill box){
+      super("Hint");
+      this.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          int hintIndex = box.getActiveCellIndex();
+          int temp = generatedContents.getContent(hintIndex);
+          if (boxContents.getContent(hintIndex) == 0){
+            boxContents.setContent(hintIndex, temp);  // Update number in array99
+            temp = Array99Mother.findNumber(temp);
+            box.setCellNumber(hintIndex, temp+1);  // Update display number
+            box.validCell.set(hintIndex, true);
+          }
+        }
+      });
+    }
+  }
+
+  private void initHistoryPanel(){
     historyPanel.confirmButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -111,11 +167,22 @@ public class MainInterface {
         // TODO: time set
       }
     });
+  }
 
-    initSlider();
+  private void initSlider(){
+    slider = new JSlider(SwingConstants.HORIZONTAL, 0,60,30);
+    slider.setPaintTrack(true);
+    slider.setPaintLabels(false);
+    slider.addChangeListener(new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+//        difficulty = slider.getValue();
+        generator.setDifficulty(slider.getValue());
+      }
+    });
+  }
 
-    // Components setup
-    // Solve Mode
+  private void initSolvePanel(){
     pauseButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -159,20 +226,12 @@ public class MainInterface {
     solveAuxPanel2.add(saveButton);
     generateProbButton.addActionListener(timer1);
     resetButton1.addActionListener(timer1);
-//    solvePanel.add(solveAuxPanel1, BorderLayout.NORTH);
-//    solvePanel.add(solveAuxPanel2, BorderLayout.NORTH);
     solveAuxPanel.add(solveAuxPanel1);
     solveAuxPanel.add(solveAuxPanel2);
     solvePanel.add(solveAuxPanel, BorderLayout.NORTH);
-    tab.addTab("Solve Problem",solvePanel);
+  }
 
-
-    // Display Mode
-    displayPanel.add(generateDispButton);
-    displayPanel.add(displayBox);
-    tab.addTab("Example Display",displayPanel);
-
-    // Free Fill Mode
+  private void initFreePanel(){
     JPanel fillAuxPanel = new JPanel();
     BoxLayout horBoxLayoutFill = new BoxLayout(fillAuxPanel,BoxLayout.X_AXIS);
     fillAuxPanel.setLayout(horBoxLayoutFill);
@@ -180,11 +239,28 @@ public class MainInterface {
     fillAuxPanel.add(resetButton2);
     fillAuxPanel.add(convertButton);
     fillAuxPanel.add(timer2.timerPanel);
+    fillAuxPanel.add(pauseButton2);
     solveButton.addActionListener(timer2);
     solveButton.addActionListener(timer2);
     freePanel.add(freeFillBox, BorderLayout.CENTER);
+    freeFillBox.setVisible(false);  // So that we won't see the box at first
     freePanel.add(freeNumberPanel, BorderLayout.SOUTH);
     freePanel.add(fillAuxPanel, BorderLayout.NORTH);
+    pauseButton2.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (isPlaying2){
+          timer2.stopCommand();
+          freeFillBox.setVisible(false);
+          pauseButton2.setText("Continue");
+          isPlaying2 = false;
+        } else {
+          timer2.startCommand();
+          freeFillBox.setVisible(true);
+          isPlaying2 = true;
+        }
+      }
+    });
     convertButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -203,53 +279,7 @@ public class MainInterface {
           }
         }
         tab.setSelectedIndex(1);
-      }
-    });
-    tab.addTab("Free Fill",freePanel);
-
-    timer1.start();
-    timer2.start();
-
-    GUIMain.add(tab);
-    GUIMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    GUIMain.setBounds(20,20, 800,800);
-    GUIMain.setVisible(true);
-  }
-
-
-  public static void main(String[] args){
-    MainInterface test = new MainInterface();
-  }
-
-
-  private class HintButton extends JButton{
-    HintButton(Array99Solve boxContents, Array99Generate generatedContents, NineBlockBoxFill box){
-      super("Hint");
-      this.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          int hintIndex = box.getActiveCellIndex();
-          int temp = generatedContents.getContent(hintIndex);
-          if (boxContents.getContent(hintIndex) == 0){
-            boxContents.setContent(hintIndex, temp);  // Update number in array99
-            temp = Array99Mother.findNumber(temp);
-            box.setCellNumber(hintIndex, temp+1);  // Update display number
-            box.validCell.set(hintIndex, true);
-          }
-        }
-      });
-    }
-  }
-
-  private void initSlider(){
-    slider = new JSlider(SwingConstants.HORIZONTAL, 0,60,30);
-    slider.setPaintTrack(true);
-    slider.setPaintLabels(false);
-    slider.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-//        difficulty = slider.getValue();
-        generator.setDifficulty(slider.getValue());
+        timer1.startCommand();
       }
     });
   }

@@ -32,12 +32,6 @@ public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxCo
           cells[index].setBackground(inertCellColor);
         cells[index].setBorderPainted(false);
 
-//        // add to panel
-//        panels[panelIndex].add(cells[index]);
-//        cells[index].setFocusable(false);
-//        cells[index].setPressedIcon(cells[index].getIcon());
-//        int finalI = i;
-//        int finalJ = j;
         // The non-writable cells also has listener in case of further change of writable[]
         cells[index].addActionListener(new ActionListener() {
           @Override
@@ -53,43 +47,6 @@ public class NineBlockBoxFill extends NineBlockBox implements NineBlockBox.boxCo
             // TODO: make button release
           }
         });
-
-        /*doc[index].addDocumentListener(new DocumentListener() {
-          @Override
-          public void insertUpdate(DocumentEvent e) {
-            String inserted = contents[index].getText();
-            int insert = Integer.parseInt(inserted);
-            if (insert > 0 && insert < 10) {
-              boxContent.setContent(finalI, finalJ,insert);
-              boxContent.stateUpdate(finalI, finalJ);
-              // TODO: highlight the erroneous cell
-            } else { // no need to correct the conflict cell; this it to check whether a valid input
-              contents[index].setText(" "); // TODO: checkout what should be inserted
-              // TODO: inform the user the input fails
-            }
-          }
-
-          @Override
-          public void removeUpdate(DocumentEvent e) {
-            // TODO: a stack to store the change made
-            boxContent.resetContent(finalI, finalJ); // is that enough?
-          }
-
-          @Override
-          public void changedUpdate(DocumentEvent e) { // same as insert?
-            String inserted = contents[index].getText();
-            int insert = Integer.parseInt(inserted);
-            if (insert > 0 && insert < 10) {
-              boxContent.setContent(finalI, finalJ,insert);
-              boxContent.stateUpdate(finalI, finalJ);
-              // TODO: highlight the erroneous cell
-            } else { // no need to correct the conflict cell; this it to check whether a valid input
-              contents[index].setText(String.valueOf(boxContent.getContent(finalI, finalJ)));
-              // TODO: inform the user the input fails
-            }
-          }
-        });*/
-
       }
     }
   }
