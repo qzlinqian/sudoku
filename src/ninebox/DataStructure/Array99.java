@@ -59,7 +59,7 @@ public class Array99 {
     return true;
   }
 
-  public boolean setContent(int index, int content){
+  public boolean  setContent(int index, int content){
     return setContent(index/9, index%9, content);
   }
 

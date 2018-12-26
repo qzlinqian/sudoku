@@ -64,4 +64,54 @@ abstract public class Array99Mother extends Array99{
     }
     return sum;
   }
+
+  @Override
+  public boolean setContent(int row, int column, int content){
+    // set number & check valid can be combined
+    //    int originNum = getContent(row, column);
+    boxContents.set(row * 9 + column, content);
+    boolean rowStat = checkRow(row, column);
+    boolean colStat = checkColumn(row, column);
+    boolean boxStat = checkBox(row, column);
+
+    return (boxStat && colStat && rowStat);
+  }
+
+  public boolean setWithIndex(int row, int column, int contentIndex){
+    return setContent(row, column, num[contentIndex]);
+  }
+
+  public boolean setWithIndex(int index, int contentIndex){
+    return setWithIndex(index/9, index%9, contentIndex);
+  }
+
+  public void statesUpd(){
+    // init the states
+    for (int i=0;i<9;i++){
+      int auxRow = 0, auxCol = 0;
+      for (int j=0;j<9;j++) {
+        auxRow |= getContent(i, j);
+        auxCol |= getContent(j, i);
+      }
+      rowState.set(i,auxRow);
+      columnState.set(i,auxCol);
+    }
+    /*for (int j=0;j<9;j++){
+      int aux = 0;
+      for (int i=0;i<9;i++)
+        aux |= getContent(i,j);
+      columnState.set(j,aux);
+    }*/
+    for (int i=0;i<3;i++){
+      for (int j=0;j<3;j++){
+        int aux = 0;
+        for (int k=0;k<3;k++){
+          for (int l=0;l<3;l++)
+            aux |= getContent(3*i+k,3*j+l);
+        }
+        boxState.set(i*3+j,aux);
+      }
+    }
+  }
+
 }

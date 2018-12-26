@@ -25,20 +25,22 @@ public class NumberInputPanel extends JPanel{
       numbers[i] = new JButton(Integer.toString(i+1));
       this.add(numbers[i]);
 
-      int FinalI = i+1;
+      int FinalI = i;
       numbers[i].addActionListener(new ActionListener(){
         @Override
         public void actionPerformed(ActionEvent e) {
           int index = box.getActiveCellIndex();
 
           if (markUp){
-            box.markCellNumber(index, FinalI);
+            box.markCellNumber(index, FinalI+1);
+            boxContents.setContent(index, 0);
+            box.validCell.set(index, true);
           } else {
 //          int originNum = boxContents.getContent(index);
-            boolean valid = boxContents.setContent(index, FinalI);
+            boolean valid = boxContents.setWithIndex(index, FinalI);
 //           boxContents.stateCheck(index, originNum);
 
-            box.setCellNumber(index, FinalI);
+            box.setCellNumber(index, FinalI+1);
             if (!valid)
               box.cellIsWrong(index);
             else
@@ -49,7 +51,7 @@ public class NumberInputPanel extends JPanel{
     }
 
     // Mark Up selection
-    markUpButton = new JButton("M");
+    markUpButton = new JButton("Mark");
     markUpButton.setBorderPainted(false);
     markUpButton.setOpaque(true);
     markUpButton.setBackground(NineBlockBox.inactiveCellColor);

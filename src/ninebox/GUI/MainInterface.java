@@ -2,24 +2,32 @@ package ninebox.GUI;
 
 import ninebox.DataStructure.Array99Compute;
 import ninebox.DataStructure.Array99Generate;
+import ninebox.DataStructure.Array99Mother;
 import ninebox.DataStructure.Array99Solve;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainInterface {
   // My components
-  Array99Compute computer;
+//  Array99Compute computer;
   Array99Solve solving, filling;
   Array99Generate generator, generator2;
+
   NineBlockBoxFill solveFillBox;
   NineBlockBoxFill freeFillBox;
   NineBlockBoxDisplay displayBox;
+
   NumberInputPanel numberPanel, freeNumberPanel;
+
   QuestionGenerateButton generateProbButton;
   SudokuGenerateButton generateDispButton;
+  HintButton hintButton;
+  QuickSolveButton quickSolveButton;
+  JButton solveButton;  // A "fake" quickSolveButton under freeFill mode, for the auto-compute algorithm won't survive
+  ResetFilledButton resetButton1, resetButton2;
 
   // Display frame & panel
   JFrame GUIMain;
@@ -28,19 +36,24 @@ public class MainInterface {
 
   public MainInterface(){
     // init along with create relevance
-    computer = new Array99Compute();
+//    computer = new Array99Compute();  // Used only in QuickSolveButton
     solving = new Array99Solve();
     filling = new Array99Solve();
-    generator = new Array99Generate();
-    generator2 = new Array99Generate();
+    generator = new Array99Generate();  // Generate question
+    generator2 = new Array99Generate();  // Generate new scheme to display
     solveFillBox = new NineBlockBoxFill();
     freeFillBox = new NineBlockBoxFill();
     displayBox = new NineBlockBoxDisplay();
 
-    numberPanel = new NumberInputPanel(solveFillBox,solving);
-    freeNumberPanel = new NumberInputPanel(freeFillBox,filling);
-    generateProbButton = new QuestionGenerateButton(solveFillBox,generator,solving);
-    generateDispButton = new SudokuGenerateButton(displayBox,generator2);
+    numberPanel = new NumberInputPanel(solveFillBox, solving);
+    freeNumberPanel = new NumberInputPanel(freeFillBox, filling);
+    generateProbButton = new QuestionGenerateButton(solveFillBox, generator, solving);
+    generateDispButton = new SudokuGenerateButton(displayBox, generator2);
+    hintButton = new HintButton(solving, generator, solveFillBox);
+    quickSolveButton = new QuickSolveButton(solveFillBox, solving);
+    solveButton = new JButton("Solve");
+    resetButton1 = new ResetFilledButton(solving,solveFillBox);
+    resetButton2 = new ResetFilledButton(filling,freeFillBox);
 
     GUIMain = new JFrame("Sudoku");
 
@@ -62,9 +75,18 @@ public class MainInterface {
     // Solve Mode
     solvePanel.add(solveFillBox, BorderLayout.CENTER);
     solvePanel.add(numberPanel, BorderLayout.SOUTH);
-    solvePanel.add(generateProbButton, BorderLayout.NORTH);
-    // TODO: add timer, hint button, reset button, generate button, difficulty setting etc.
+    // Solve mode auxiliary bar
+    JPanel solveAuxPanel = new JPanel();
+    BoxLayout horBoxLayout = new BoxLayout(solveAuxPanel,BoxLayout.X_AXIS);
+    solveAuxPanel.setLayout(horBoxLayout);
+    solveAuxPanel.add(generateProbButton);
+    solveAuxPanel.add(quickSolveButton);
+    solveAuxPanel.add(resetButton1);
+    solveAuxPanel.add(hintButton);
+    // TODO: add timer, difficulty setting etc.
+    solvePanel.add(solveAuxPanel, BorderLayout.NORTH);
     tab.addTab("Solve Problem",solvePanel);
+
 
     // Display Mode
     displayPanel.add(generateDispButton);
@@ -72,13 +94,19 @@ public class MainInterface {
     tab.addTab("Example Display",displayPanel);
 
     // Free Fill Mode
+    JPanel fillAuxPanel = new JPanel();
+    BoxLayout horBoxLayout2 = new BoxLayout(fillAuxPanel,BoxLayout.X_AXIS);
+    fillAuxPanel.setLayout(horBoxLayout2);
+    fillAuxPanel.add(solveButton);
+    fillAuxPanel.add(resetButton2);
     freePanel.add(freeFillBox, BorderLayout.CENTER);
     freePanel.add(freeNumberPanel, BorderLayout.SOUTH);
+    freePanel.add(fillAuxPanel, BorderLayout.NORTH);
     tab.addTab("Free Fill",freePanel);
 
     GUIMain.add(tab);
     GUIMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    GUIMain.setBounds(20,20, 500,500);
+    GUIMain.setBounds(20,20, 800,800);
     GUIMain.setVisible(true);
   }
 
@@ -106,6 +134,26 @@ public class MainInterface {
 
   public static void main(String[] args){
     MainInterface test = new MainInterface();
+  }
+
+
+  private class HintButton extends JButton{
+    HintButton(Array99Solve boxContents, Array99Generate generatedContents, NineBlockBoxFill box){
+      super("Hint");
+      this.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          int hintIndex = box.getActiveCellIndex();
+          int temp = generatedContents.getContent(hintIndex);
+          if (boxContents.getContent(hintIndex) == 0){
+            boxContents.setContent(hintIndex, temp);  // Update number in array99
+            temp = Array99Mother.findNumber(temp);
+            box.setCellNumber(hintIndex, temp+1);  // Update display number
+            box.validCell.set(hintIndex, true);
+          }
+        }
+      });
+    }
   }
 
 }

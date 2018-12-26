@@ -62,7 +62,7 @@ public class Array99Solve extends Array99Mother {
 //    if ((getContent(row, column) & boxState.get(index)) != 0)
 //      return false;
 //    boxState.set(index, (boxState.get(index) & ~originNum) | getContent(row, column));
-    int aux = 0, rowStart = row/3, colStart = column/3;
+    int aux = 0, rowStart = (row/3)*3, colStart = (column/3)*3;
     for (int i=rowStart;i<rowStart+3;i++){
       for (int j=colStart;j<colStart+3;j++){
         if (i==row && j==column) continue;
@@ -110,17 +110,7 @@ public class Array99Solve extends Array99Mother {
 //      stepStack.remove(0); // then stepStack[0] is another case (or empty)
 //    }
 //  }
-  @Override
-  public boolean setContent(int row, int column, int content){
-  // set number & check valid can be combined
-  //    int originNum = getContent(row, column);
-    boxContents.set(row * 9 + column, content);
-    boolean rowStat = checkRow(row, column);
-    boolean colStat = checkColumn(row, column);
-    boolean boxStat = checkBox(row, column);
 
-    return (boxStat && colStat && rowStat);
-  }
 
 
 //  // define a private class to record the solution steps

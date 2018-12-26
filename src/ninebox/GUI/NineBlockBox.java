@@ -1,6 +1,9 @@
 package ninebox.GUI;
 
+import ninebox.DataStructure.Array99;
+import ninebox.DataStructure.Array99Compute;
 import ninebox.DataStructure.Array99Generate;
+import ninebox.DataStructure.Array99Mother;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -80,8 +83,23 @@ public class NineBlockBox extends JPanel{
     cells[index].setText(prevMark+i);
   }
 
+  public void resetCellNumber(int index){
+    cells[index].setText("");
+    cells[index].setBackground(inactiveCellColor);
+  }
+
   public int getActiveCellIndex() {
     return activeCellIndex;
+  }
+
+  // No promise on order < solution.size()-1. Use carefully
+  void boxContnentFill(Array99Compute computeContents, int order){
+    Array99 solution = computeContents.solutions.get(order);
+    for (int index=0;index<81;index++){
+      int temp = solution.getContent(index);
+      temp = Array99Mother.findNumber(temp);
+      this.setCellNumber(index,temp+1);
+    }
   }
 
   interface boxContentsUpdate{

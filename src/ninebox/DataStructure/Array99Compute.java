@@ -8,7 +8,7 @@ import java.util.Stack;
 public class Array99Compute extends Array99Mother{
   private ArrayList<Integer> possibleContents;
 //  private Stack<Integer> stepStack; // in case of multi-solution
-  private ArrayList<Array99> solutions; // in case of multi-solution
+  public ArrayList<Array99> solutions; // in case of multi-solution
   private int minCasesAt, minCases;
   int i,j;
 
@@ -19,29 +19,8 @@ public class Array99Compute extends Array99Mother{
 
     this.possibleContents = new ArrayList<>(Collections.nCopies(81,0));
     this.solutions = new ArrayList<>();
-    // init the states
-    for (int i=0;i<9;i++){
-      int aux = 0;
-      for (int j=0;j<9;j++)
-        aux |= getContent(i,j);
-      rowState.set(i,aux);
-    }
-    for (int j=0;j<9;j++){
-      int aux = 0;
-      for (int i=0;i<9;i++)
-        aux |= getContent(i,j);
-      columnState.set(j,aux);
-    }
-    for (int i=0;i<3;i++){
-      for (int j=0;j<3;j++){
-        int aux = 0;
-        for (int k=0;k<3;k++){
-          for (int l=0;l<3;l++)
-            aux |= getContent(3*i+k,3*j+l);
-        }
-        boxState.set(i*3+j,aux);
-      }
-    }
+
+    this.statesUpd();
   }
 
   Array99Compute(Array99Compute array99Compute){ // No need to update State arrays
@@ -114,7 +93,7 @@ public class Array99Compute extends Array99Mother{
   }
 
   // TODO: move solve() to outside class?
-  void solve(){
+  public void solve(){
     while (true){
       int flag = traverse();
       if (flag == 0) return;
