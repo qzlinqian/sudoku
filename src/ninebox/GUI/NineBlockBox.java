@@ -70,7 +70,7 @@ public class NineBlockBox extends JPanel{
   }
 
   // No promise on order < solution.size()-1. Use carefully
-  void boxContnentFill(Array99Compute computeContents, int order){
+  void boxContentFill(Array99Compute computeContents, int order){
     Array99 solution = computeContents.solutions.get(order);
     for (int index=0;index<81;index++){
       int temp = solution.getContent(index);

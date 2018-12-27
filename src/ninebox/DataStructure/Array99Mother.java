@@ -57,7 +57,7 @@ abstract public class Array99Mother extends Array99{
     return lo; // it is not an element of num[]
   }
 
-  public int possibleNumbers(int numberInput){
+  public int possibleNumbers(int numberInput){ // TODO: Can use mod 2 to compute
     if (numberInput < 1) return 0;
     int sum = 1;
     int degree = (int) Math.floor(Math.log(numberInput)/Math.log(2));

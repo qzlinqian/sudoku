@@ -15,12 +15,12 @@ public class QuickSolveButton extends JButton {
     index = 0;
     this.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {  // TODO: This's erroneous. Update computer at GeneratorButton in MainInterface!
         Array99Compute computeContents = new Array99Compute(boxContents);
         computeContents.solve();
         int size = computeContents.solutions.size();
         if (size > 0){
-          nineBlockBox.boxContnentFill(computeContents,index);
+          nineBlockBox.boxContentFill(computeContents,index);
           if (++index > size -1)
             index -= size;
         }

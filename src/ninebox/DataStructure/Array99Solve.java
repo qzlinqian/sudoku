@@ -15,7 +15,9 @@ public class Array99Solve extends Array99Mother {
       if (newContents.getVisible(index))
         this.boxContents.set(index,newContents.getContent(index));
       else this.boxContents.set(index,0);
-    }
+    } // No need to update states during setup
+
+    this.statesUpd();
   }
 
   @Override
