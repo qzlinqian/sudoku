@@ -4,8 +4,16 @@ It's the final course project of JAVA Programming, THU 2018 Fall. I was a aficio
 
 ### Demo
 
-![Load History](fig/history.png)![Solve Problem](fig/solve.png)
-![Example Display](fig/display.png)![Free Fill](fig/free.png)
+<table>
+  <tr>
+    <td><center><img src="fig/history.png">Load History</center></td>
+    <td><center><img src="fig/solve.png">Solve Problem</center></td>
+  </tr>
+  <tr>
+​    <td><center><img src="fig/display.png">Example Display</center></td>
+​    <td><center><img src="fig/free.png">Free Fill</center></td>
+  </tr>
+</table>
 
 ### Implement Details
 

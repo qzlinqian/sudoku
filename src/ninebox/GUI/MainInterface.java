@@ -2,6 +2,7 @@ package ninebox.GUI;
 
 import ninebox.Auxiliary.HistoryArrayLoader;
 import ninebox.Auxiliary.StopWatch;
+import ninebox.DataStructure.Array99Compute;
 import ninebox.DataStructure.Array99Generate;
 import ninebox.DataStructure.Array99Mother;
 import ninebox.DataStructure.Array99Solve;
@@ -19,7 +20,7 @@ public class MainInterface {
   boolean isPlaying2;
 
   // My components
-//  Array99Compute computer;
+  private Array99Compute computer;
   private Array99Solve solving, filling;
   private Array99Generate generator, generator2;
 
@@ -31,10 +32,10 @@ public class MainInterface {
 
   private HistoryLoaderPanel historyPanel;
 
-  private QuestionGenerateButton generateProbButton;
+  private QuestionGenSolButton genSolPanel;
   private SudokuGenerateButton generateDispButton;
   private HintButton hintButton;
-  private QuickSolveButton quickSolveButton;
+//  private QuickSolveButton quickSolveButton;
   private JButton solveButton;  // A "fake" quickSolveButton under freeFill mode, for the auto-compute algorithm won't survive
   private ResetFilledButton resetButton1, resetButton2;
   private JButton pauseButton, convertButton, pauseButton2;
@@ -49,7 +50,7 @@ public class MainInterface {
   StopWatch timer1, timer2;
 
   public MainInterface(){
-    isPlaying = true;
+    isPlaying = false;
     isPlaying2 = false;
 
     // init along with create relevance
@@ -80,13 +81,13 @@ public class MainInterface {
 
     numberPanel = new NumberInputPanel(solveFillBox, solving, timer1, solvePanel);
     freeNumberPanel = new NumberInputPanel(freeFillBox, filling, timer2, freePanel);
-    generateProbButton = new QuestionGenerateButton(solveFillBox, generator, solving);
+    genSolPanel = new QuestionGenSolButton(solveFillBox, generator, solving);
     generateDispButton = new SudokuGenerateButton(displayBox, generator2);
     hintButton = new HintButton(solving, generator, solveFillBox);
-    quickSolveButton = new QuickSolveButton(solveFillBox, solving);
+//    quickSolveButton = new QuickSolveButton(solveFillBox, solving);
     solveButton = new JButton("Solve");
-    resetButton1 = new ResetFilledButton(solving,solveFillBox);
-    resetButton2 = new ResetFilledButton(filling,freeFillBox);
+    resetButton1 = new ResetFilledButton(solving, solveFillBox);
+    resetButton2 = new ResetFilledButton(filling, freeFillBox);
     pauseButton = new JButton("Pause");
     pauseButton2 = new JButton("Start");
     convertButton = new JButton("Solve It!");
@@ -116,12 +117,26 @@ public class MainInterface {
     initFreePanel();
     tab.addTab("Free Fill",freePanel);
 
+    tab.addChangeListener(new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        timer1.stopCommand();
+        timer2.stopCommand();
+        solveFillBox.setVisible(false);
+        freeFillBox.setVisible(false);
+        pauseButton.setText("Continue");
+        pauseButton2.setText("Continue");
+        isPlaying = false;
+        isPlaying2 = false;
+      }
+    });
+
     timer1.start();
     timer2.start();
 
     GUIMain.add(tab);
     GUIMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    GUIMain.setBounds(20,20, 800,800);
+    GUIMain.setBounds(20,20, 850,850);
     GUIMain.setVisible(true);
   }
 
@@ -157,6 +172,7 @@ public class MainInterface {
         try {
           timer1.stopCommand();
           HistoryArrayLoader.loadHistory(historyPanel.getChosenFile(), solving, solveFillBox, timer1);
+          genSolPanel.computerUpd(solving);
         } catch (IOException e1) {
           e1.printStackTrace();
         }
@@ -164,7 +180,6 @@ public class MainInterface {
         solveFillBox.setVisible(false);
         pauseButton.setText("Continue");
         isPlaying = false;
-        // TODO: time set
       }
     });
   }
@@ -212,8 +227,8 @@ public class MainInterface {
     solveAuxPanel.setLayout(verBoxLayout);
     solveAuxPanel1.setLayout(horBoxLayout1);
     solveAuxPanel2.setLayout(horBoxLayout2);
-    solveAuxPanel1.add(generateProbButton);
-    solveAuxPanel1.add(quickSolveButton);
+    solveAuxPanel1.add(genSolPanel);
+//    solveAuxPanel1.add(quickSolveButton);
     solveAuxPanel1.add(resetButton1);
     solveAuxPanel1.add(hintButton);
     solveAuxPanel1.add(timer1.timerPanel);
@@ -221,10 +236,18 @@ public class MainInterface {
     solveAuxPanel2.add(slider);
     solveAuxPanel2.add(pauseButton);
 
-    // TODO
     SaveButton saveButton = new SaveButton(solving, solveFillBox, timer1, historyPanel);
     solveAuxPanel2.add(saveButton);
-    generateProbButton.addActionListener(timer1);
+    genSolPanel.generateButton.addActionListener(timer1);
+    genSolPanel.generateButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        solveFillBox.setVisible(true);
+        pauseButton.setText("Pause");
+        isPlaying = true;
+        timer1.startCommand();
+      }
+    });
     resetButton1.addActionListener(timer1);
     solveAuxPanel.add(solveAuxPanel1);
     solveAuxPanel.add(solveAuxPanel2);
@@ -277,6 +300,11 @@ public class MainInterface {
             solveFillBox.setWritable(index, false);
             solveFillBox.cellIsGiven(index);
           }
+        }
+        if (filling.enough())
+          genSolPanel.computerUpd(solving);
+        else {
+          JOptionPane.showMessageDialog(freePanel, "Too few inputs, cannot solve automatically.");
         }
         tab.setSelectedIndex(1);
         timer1.startCommand();

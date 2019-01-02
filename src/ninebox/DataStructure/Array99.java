@@ -84,4 +84,13 @@ public class Array99 {
     }
     return print.toString();
   }
+
+  public boolean enough(){
+    int sum = 0;
+    for (int temp:boxContents){
+      if (temp > 0)
+        sum++;
+    }
+    return (sum > 20);
+  }
 }

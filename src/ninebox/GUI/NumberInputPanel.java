@@ -12,10 +12,9 @@ import java.awt.event.ActionListener;
 public class NumberInputPanel extends JPanel{
 //  int newNumber;
 //  public JPanel panel;
-  JButton[] numbers = new JButton[9];
-  JButton markUpButton;
-  boolean markUp;
-  private JDialog inform;
+  private JButton[] numbers = new JButton[9];
+  private JButton markUpButton, clearButton;
+  private boolean markUp;
 
   public NumberInputPanel(NineBlockBoxFill box, Array99Mother boxContents, StopWatch timer, JPanel panel){
 //    panel = new JPanel();
@@ -23,8 +22,8 @@ public class NumberInputPanel extends JPanel{
 
 //    inform = new JDialog();
 
-    GridLayout gridLayout = new GridLayout(1,10);
-    this.setLayout(gridLayout);
+    BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
+    this.setLayout(layout);
     for (int i=0;i<9;i++){
       numbers[i] = new JButton(Integer.toString(i+1));
       this.add(numbers[i]);
@@ -59,6 +58,18 @@ public class NumberInputPanel extends JPanel{
         }
       });
     }
+
+    clearButton = new JButton("Clear");
+    clearButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        int index = box.getActiveCellIndex();
+        box.resetCellNumber(index);
+        boxContents.setContent(index, 0);
+        box.validCell.set(index, true);
+      }
+    });
+    this.add(clearButton);
 
     // Mark Up selection
     markUpButton = new JButton("Mark");
