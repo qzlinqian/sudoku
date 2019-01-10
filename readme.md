@@ -25,7 +25,7 @@ It's the final course project of JAVA Programming, THU 2018 Fall. I was a aficio
 * *NumberInputPanel*: input 1~9 number to the selected button in NineBlockBoxFill in *Solve Mode* and *Free (Fill) Mode*; can also choose to *Mark UP*.
 * *HistoryLoaderPanel*: load and display the files saved previously in *Solve Mode*, so that we can continue with the unsolved problems.
 * The implementation of some button is a little complex, so I wrote some class out of the MainGUI, e.g., *QuestionGeneratorButton* to generate new questions in *Solve Mode*, *QuickSolveButton* to solve the remaining blocks in *Solve Mode* and *Free (Fill) Mode*, *ResetFilledButton* to reset the filled blocks in *Solve Mode* and *Free (Fill) Mode*, *SudokuGenerateButton* to generate a new completed scheme in *Display Mode*, *SaveButton* to save the current box state in *Solve Mode*.
-* *MainInterface*: the main GUI. Organize all the mode (*Load History*, *Solve Problem*, *Example Display*, *Free Fill*) with a TabbedPanel. There's also a 
+* *MainInterface*: the main GUI. Organize all the mode (*Load History*, *Solve Problem*, *Example Display*, *Free Fill*) with a TabbedPanel.
 
 #### DataStructure
 
