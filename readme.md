@@ -6,12 +6,12 @@ It's the final course project of JAVA Programming, THU 2018 Fall. I was a aficio
 
 <table>
   <tr>
-    <td><center><img src="http://www.qianl.in/2019/01/10/sudoku/history.png">Load History</center></td>
-    <td><center><img src="http://www.qianl.in/2019/01/10/sudoku/solve.png">Solve Problem</center></td>
+    <td><center><img src="http://pic.qianl.in/uploads/big/5788fd60f39cf6e15d5caeaddb7354f2.png">Load History</center></td>
+    <td><center><img src="http://pic.qianl.in/uploads/big/a7c3a5600bf9ec88c7212bb399e04478.png">Solve Problem</center></td>
   </tr>
   <tr>
-​    <td><center><img src="http://www.qianl.in/2019/01/10/sudoku/display.png">Example Display</center></td>
-​    <td><center><img src="http://www.qianl.in/2019/01/10/sudoku/free.png">Free Fill</center></td>
+​    <td><center><img src="http://pic.qianl.in/uploads/big/e1268fb5b98097f8df18ee68e7064c75.png">Example Display</center></td>
+​    <td><center><img src="http://pic.qianl.in/uploads/big/95e8243a9270f2ed566ef11052994dc3.png">Free Fill</center></td>
   </tr>
 </table>
 
@@ -39,7 +39,7 @@ It's the final course project of JAVA Programming, THU 2018 Fall. I was a aficio
 
 * *Array99Generate*: generate valid sudoku questions. As is shown in the above picture, I used an algorithm metioned [here](https://blog.csdn.net/qq_26822029/article/details/81129701) to generate a new scheme.
 
-   ![](http://www.qianl.in/2019/01/10/sudoku/generate.png)
+   ![](http://pic.qianl.in/uploads/big/2f9ec094ab6c9516fd5948650de6a1dc.png)
 
   That's very efficient, although it can be solved very quickly if know the scheme. In the *Solve Problem* Mode, the generate process also need to decide which blocks should be set to null for the user to fill. The difficulty SilerBar in the *Solve Problem* Panel decides a difficulty constant **F**. I used to chosen **floor(F\*81)** blocks randomly to achieve that, but that's too time consuming, for the already chosen blocks can be chosen at a very high possiblity. So I select every block with a possibility of **F** instead. Although the total selected blocks may not be that accurate, it's considerably efficient.
 
